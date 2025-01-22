@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         }
         Inicializar_RecyclerView()
         mi_toolbar=findViewById(R.id.toolbar)
+        mi_toolbar.title=""
         setSupportActionBar(findViewById(R.id.toolbar))
 
     }

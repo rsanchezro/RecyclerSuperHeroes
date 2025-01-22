@@ -8,28 +8,40 @@
     tools:context=".MainActivity">
 <com.google.android.material.appbar.AppBarLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-   >
+    android:layout_height="250dp">
 
+<com.google.android.material.appbar.CollapsingToolbarLayout
+    android:id="@+id/collapsinglayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_scrollFlags="scroll|exitUntilCollapsed"
+    >
+    <ImageView
+        android:id="@+id/headerImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/super_heroes"
 
+        app:layout_collapseMode="parallax" />
     <!-- para que el toolbar no desaparezca se pone layout_collapseMode -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
+        app:layout_collapseMode="pin"
         />
 
+</com.google.android.material.appbar.CollapsingToolbarLayout>
 
 </com.google.android.material.appbar.AppBarLayout>
-<!-- La propiedad app:layout_behavior es muy
-importante para el CoordinatorLayout gestione el espacio
-al recyclerview debajo del AppBarLayout -->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mirecyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
+        android:paddingTop="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
        />
 
