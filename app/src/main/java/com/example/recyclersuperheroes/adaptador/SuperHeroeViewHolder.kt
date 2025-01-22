@@ -1,8 +1,10 @@
 package com.example.recyclersuperheroes.adaptador
 
+import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.example.recyclersuperheroes.R
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.recyclersuperheroes.SuperHeroe
@@ -10,7 +12,7 @@ import com.example.recyclersuperheroes.SuperHeroe
 import com.example.recyclersuperheroes.cargarImagen
 import com.example.recyclersuperheroes.databinding.ElementoSuperheroeBinding
 
-class SuperHeroeViewHolder(vista: View): ViewHolder(vista) {
+class SuperHeroeViewHolder(val vista: View,val context: Context): ViewHolder(vista) {
    val binding= ElementoSuperheroeBinding.bind(vista)
     /* SIN USAR BIDING ES NECESARIO LO SIGUIENTE
     //Defino tantos elementos de vista como elementos tenga que visualizar
@@ -33,9 +35,11 @@ class SuperHeroeViewHolder(vista: View): ViewHolder(vista) {
         this.vista_publicador.text=misuperHeroe.publicador
         this.vista_imagen.cargarImagen(misuperHeroe.foto)
 */
+
         //itemView representa toda la celda
-        itemView.setOnClickListener{
+       vista.setOnClickListener{
             //El codigo que quiero que se ejecute
+            Toast.makeText(context,"click en la vista",Toast.LENGTH_LONG).show()
         }
     }
 }
