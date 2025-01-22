@@ -3,6 +3,7 @@ package com.example.recyclersuperheroes
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -12,6 +13,8 @@ import com.example.recyclersuperheroes.adaptador.SuperHeroeAdaptador
 
 class MainActivity : AppCompatActivity() {
     lateinit var mirecyclerView:RecyclerView
+    lateinit var miadaptador:SuperHeroeAdaptador
+    lateinit var mi_toolbar:Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +26,9 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         Inicializar_RecyclerView()
+        mi_toolbar=findViewById(R.id.toolbar)
+        setSupportActionBar(findViewById(R.id.toolbar))
+
     }
 
     private fun Inicializar_RecyclerView() {
@@ -32,7 +38,8 @@ class MainActivity : AppCompatActivity() {
         //Definimos el tipo de recyclerView
         mirecyclerView.layoutManager=manager
         //Fijar el adaptador
-        mirecyclerView.adapter=SuperHeroeAdaptador(SuperHeroeProveedor.SuperHeroeList)
+        miadaptador=SuperHeroeAdaptador(SuperHeroeProveedor.SuperHeroeList)
+        mirecyclerView.adapter=miadaptador
 
         //Añadimos un separador a los elementos dle recyclerView
         val decorador=DividerItemDecoration(this,manager.orientation)
