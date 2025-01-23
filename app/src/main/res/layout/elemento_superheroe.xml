@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:backgroundTint="@color/sin_selecionar"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp">
 <androidx.constraintlayout.widget.ConstraintLayout

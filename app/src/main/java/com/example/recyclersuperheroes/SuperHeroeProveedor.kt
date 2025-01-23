@@ -101,5 +101,7 @@ class SuperHeroeProveedor {
                 "https://cursokotlin.com/wp-content/uploads/2017/07/wonder_woman.jpg"
             )
         )
+
+        var SuperHeroe_seleccionados= mutableListOf<SuperHeroe>()
     }
 }

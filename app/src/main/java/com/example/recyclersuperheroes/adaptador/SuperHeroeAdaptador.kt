@@ -6,14 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.example.recyclersuperheroes.MainActivity
 import com.example.recyclersuperheroes.R
 import com.example.recyclersuperheroes.SuperHeroe
 import com.example.recyclersuperheroes.cargarImagen
 import com.example.recyclersuperheroes.databinding.ElementoSuperheroeBinding
 
-class SuperHeroeAdaptador(val superHeroes:List<SuperHeroe>):RecyclerView.Adapter<SuperHeroeAdaptador.SuperHeroeViewHolder>() {
+class SuperHeroeAdaptador(val superHeroes:List<SuperHeroe>,val onClickLargo:(Int)->Unit,val onclickCorto:(Int)->Unit):RecyclerView.Adapter<SuperHeroeAdaptador.SuperHeroeViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SuperHeroeViewHolder {
         //Este metodo crea un ViewHolder, se crearan como máximo unos 7 u 8 depende de la pantalla y del tamaño del
@@ -34,6 +36,15 @@ class SuperHeroeAdaptador(val superHeroes:List<SuperHeroe>):RecyclerView.Adapter
     override fun onBindViewHolder(holder: SuperHeroeViewHolder, position: Int) {
         //Se invoca por cada elemento que se visualiza
         holder.vincular(superHeroes.get(position))
+        holder.vista.setOnClickListener {
+            onclickCorto(position)
+        }
+        holder.vista.setOnLongClickListener {
+            onClickLargo(position)
+            //Para que se consuma el evento
+            return@setOnLongClickListener false
+        }
+
 
     }
 
@@ -53,7 +64,17 @@ class SuperHeroeAdaptador(val superHeroes:List<SuperHeroe>):RecyclerView.Adapter
             binding.tvSuperHeroName.text=misuperHeroe.superHeroe
             binding.tvRealName.text=misuperHeroe.nombre
             binding.tvPublisher.text=misuperHeroe.publicador
-            binding.ivSuperHero.cargarImagen(misuperHeroe.foto)
+            if(MainActivity.actionMode_activo)
+            {
+                binding.ivSuperHero.setImageResource(R.drawable.ic_check_circle_24dp)
+
+
+            }
+
+
+
+
+
             /* SIN USAR BIDING
             this.vista_nombre.text=misuperHeroe.superHeroe
 
@@ -62,11 +83,7 @@ class SuperHeroeAdaptador(val superHeroes:List<SuperHeroe>):RecyclerView.Adapter
             this.vista_imagen.cargarImagen(misuperHeroe.foto)
     */
 
-            //itemView representa toda la celda
-            vista.setOnClickListener{
-                //El codigo que quiero que se ejecute
-                Toast.makeText(context,"click en la vista", Toast.LENGTH_LONG).show()
-            }
+
         }
     }
 
