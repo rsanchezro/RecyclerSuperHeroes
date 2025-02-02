@@ -15,7 +15,8 @@ import com.example.recyclersuperheroes.SuperHeroe
 import com.example.recyclersuperheroes.cargarImagen
 import com.example.recyclersuperheroes.databinding.ElementoSuperheroeBinding
 
-class SuperHeroeAdaptador(val superHeroes:List<SuperHeroe>,val onClickLargo:(Int)->Unit,val onclickCorto:(Int)->Unit):RecyclerView.Adapter<SuperHeroeAdaptador.SuperHeroeViewHolder>() {
+class SuperHeroeAdaptador(val superHeroes:List<SuperHeroe>,val seleccionados:List<Int>,val onClickLargo:(Int)->Unit,val onclickCorto:(Int)->Unit):RecyclerView.Adapter<SuperHeroeAdaptador.SuperHeroeViewHolder>() {
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SuperHeroeViewHolder {
         //Este metodo crea un ViewHolder, se crearan como máximo unos 7 u 8 depende de la pantalla y del tamaño del
@@ -25,7 +26,7 @@ class SuperHeroeAdaptador(val superHeroes:List<SuperHeroe>,val onClickLargo:(Int
 
         val miView=minflater.inflate(R.layout.elemento_superheroe,parent,false)
         //Retorno el viewHolder y le paso la vista inflada de un elemento
-        return SuperHeroeViewHolder(miView,parent.context)
+        return SuperHeroeViewHolder(miView)
     }
 
     override fun getItemCount(): Int=
@@ -35,40 +36,38 @@ class SuperHeroeAdaptador(val superHeroes:List<SuperHeroe>,val onClickLargo:(Int
 
     override fun onBindViewHolder(holder: SuperHeroeViewHolder, position: Int) {
         //Se invoca por cada elemento que se visualiza
-        holder.vincular(superHeroes.get(position))
+        holder.vincular(superHeroes.get(position),seleccionados.contains(position))
         holder.vista.setOnClickListener {
             onclickCorto(position)
         }
         holder.vista.setOnLongClickListener {
             onClickLargo(position)
             //Para que se consuma el evento
-            return@setOnLongClickListener false
+             false
         }
 
 
     }
 
 
-    class SuperHeroeViewHolder(val vista: View, val context: Context): ViewHolder(vista) {
+    class SuperHeroeViewHolder(val vista: View): ViewHolder(vista) {
         val binding= ElementoSuperheroeBinding.bind(vista)
-        /* SIN USAR BIDING ES NECESARIO LO SIGUIENTE
-        //Defino tantos elementos de vista como elementos tenga que visualizar
-        //En este caso 3 textview y 1 ImageView
-        val vista_nombre=vista.findViewById<TextView>(R.id.tvSuperHeroName)
-        val vista_nombre_real=vista.findViewById<TextView>(R.id.tvRealName)
-        val vista_imagen=vista.findViewById<ImageView>(R.id.ivSuperHero)
-        val vista_publicador=vista.findViewById<TextView>(R.id.tvPublisher)
-    */
-        fun vincular(misuperHeroe:SuperHeroe)
+
+        fun vincular(misuperHeroe:SuperHeroe,seleccionado:Boolean)
         {
             binding.tvSuperHeroName.text=misuperHeroe.superHeroe
             binding.tvRealName.text=misuperHeroe.nombre
             binding.tvPublisher.text=misuperHeroe.publicador
-            if(MainActivity.actionMode_activo)
+            if(MainActivity.actionMode_activo && seleccionado)
             {
-                binding.ivSuperHero.setImageResource(R.drawable.ic_check_circle_24dp)
+
+                binding.ivSuperHero.setImageResource( R.drawable.ic_check_circle_24dp )
 
 
+            }
+            else
+            {
+                binding.ivSuperHero.cargarImagen(misuperHeroe.foto)
             }
 
 

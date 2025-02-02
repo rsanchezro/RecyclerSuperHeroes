@@ -71,42 +71,44 @@ class MainActivity : AppCompatActivity() {
         //Definimos el tipo de recyclerView
         mirecyclerView.layoutManager = manager
         //Fijar el adaptador
-        miadaptador = SuperHeroeAdaptador(SuperHeroeProveedor.SuperHeroeList,
+        miadaptador = SuperHeroeAdaptador(SuperHeroeProveedor.SuperHeroeList,SuperHeroeProveedor.SuperHeroe_seleccionados,
             { pos -> preparo_toolbar(pos) },
             { pos -> preparo_selecion(pos) })
         mirecyclerView.adapter = miadaptador
 
-        //Añadimos un separador a los elementos dle recyclerView
-        val decorador = DividerItemDecoration(this, manager.orientation)
-        mirecyclerView.addItemDecoration(decorador)
+
     }
 
     //Funcion que prepara el toolbar cuando hago pulsacion larga sobre un elemento
     fun preparo_toolbar(posicion: Int) {
-        //Primero borro el menu que hubiera en Toolbar
-        mi_toolbar.menu.clear()
-        //Inflo el menu de accion contextual casero
-        mi_toolbar.inflateMenu(R.menu.menu_accion_contextual)
-        //Indico que estamos en ActionMode
-        actionMode_activo = true
+        //Solo preparo el toolbar si no lo he preparado antes
+        if(!actionMode_activo) {
+            //Primero borro el menu que hubiera en Toolbar
+            mi_toolbar.menu.clear()
+            //Inflo el menu de accion contextual casero
+            mi_toolbar.inflateMenu(R.menu.menu_accion_contextual)
+            //Indico que estamos en ActionMode
+            actionMode_activo = true
 
-        //Habilita el botón de "navegación hacia arriba" (o "back")
-        // en la barra de acciones (ActionBar o Toolbar) del Activity.
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            //Habilita el botón de "navegación hacia arriba" (o "back")
+            // en la barra de acciones (ActionBar o Toolbar) del Activity.
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        preparo_selecion(posicion)
+            preparo_selecion(posicion)
+       }
     }
 
     //Funcion para guardar en una lista los elementos que voy seleccionando, clickcorto
     fun preparo_selecion(posicion: Int) {
         //Solo tiene efecto si esta el actionMode activo
         if (actionMode_activo) {
+
             with(SuperHeroeProveedor) {
-                val superHeroe = SuperHeroeList[posicion]
-                if (!SuperHeroe_seleccionados.contains(superHeroe)) {
-                    SuperHeroe_seleccionados.add(superHeroe)
+                //val superHeroe = SuperHeroeList[posicion]
+                if (!SuperHeroe_seleccionados.contains(posicion)) {
+                    SuperHeroe_seleccionados.add(posicion)
                 } else {
-                    SuperHeroe_seleccionados.remove(superHeroe)
+                    SuperHeroe_seleccionados.remove(posicion)
                 }
                 actualiza_contador()
                 //Notifico de los cambios al adaptador
@@ -126,24 +128,30 @@ class MainActivity : AppCompatActivity() {
                 //aparece con 1 elemento seleccionado me aseguro por si acaso
                 if(SuperHeroeProveedor.SuperHeroe_seleccionados.size==1){
                     val editText=EditText(this)
+                    //Modifico el valor del elemento
+                    val superheroe_indice=SuperHeroeProveedor.SuperHeroe_seleccionados.get(0)
+                    val super_hero_seleccionado=SuperHeroeProveedor.SuperHeroeList.get(superheroe_indice)
+                    editText.setText(super_hero_seleccionado.nombre)
                     val builder_dialog=AlertDialog.Builder(this)
-                        .setTitle("Edit")
+                        .setTitle("Nombre SuperHeroe")
                         .setView(editText)
                         .setPositiveButton("Ok"){dialog,button->
                             //Modifico el valor del elemento
-                            val superheroe=SuperHeroeProveedor.SuperHeroe_seleccionados.get(0)
+
                             //Cambio su nombre
-                            superheroe.nombre=editText.text.toString()
+                           super_hero_seleccionado.nombre=editText.text.toString()
 
                             //Salgo del actionMode
                             actionMode_activo=false
                             //Actualizo los cambios de ese elemento
+                            miadaptador.notifyItemChanged(superheroe_indice)
                             //Necesito saber que elemento es, claro
                             //Necesario implementar esto
                          //   miadaptador.cambiarDatos(SuperHeroeProveedor.SuperHeroeList.indexOf(SuperHeroeProveedor.SuperHeroe_seleccionados.get(0)),superheroe)
                             //Limpio el action mode
                             limpiar_actionMode()
-                        }
+
+                        }.create().show()
                 }
             }
             R.id.item_delete->{
@@ -151,6 +159,11 @@ class MainActivity : AppCompatActivity() {
                 actionMode_activo=false
                 //Elimino los elementos de la lista que se han seleccionado
                // miadaptador.eliminar_elementos(SuperHeroeProveedor.SuperHeroe_seleccionados)
+                SuperHeroeProveedor.SuperHeroeList.removeIf {
+                    SuperHeroeProveedor.SuperHeroe_seleccionados.contains(SuperHeroeProveedor.SuperHeroeList.indexOf(it))
+
+                }
+                miadaptador.notifyDataSetChanged()
                 //Limpio el action mode
                 limpiar_actionMode()
 
